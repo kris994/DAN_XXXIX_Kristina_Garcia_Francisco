@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DAN_XXXIX_Kristina_Garcia_Francisco
@@ -27,8 +28,8 @@ namespace DAN_XXXIX_Kristina_Garcia_Francisco
         }
 
         public void SongStopped()
-        {
-            Console.WriteLine("Audio player was closed.");
+        {          
+            Console.WriteLine("\nAudio player was closed.");
         }
 
         public void ListAllSongs()
@@ -52,6 +53,8 @@ namespace DAN_XXXIX_Kristina_Garcia_Francisco
 
             if (Program.allSong.Any())
             {
+                Console.WriteLine("Press \"ESC\" button to stop the player from running.");
+                Console.WriteLine("-------------------------------");
                 ListAllSongs();
                 Console.WriteLine("-------------------------------");
                 Console.Write("\nChoose a song number: ");

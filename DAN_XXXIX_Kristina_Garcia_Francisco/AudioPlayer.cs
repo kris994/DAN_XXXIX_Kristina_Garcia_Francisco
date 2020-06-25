@@ -28,15 +28,16 @@ namespace DAN_XXXIX_Kristina_Garcia_Francisco
 
         public void AutioPlayerActivity()
         {
+            playing = true;
             Song s = new Song();
             s = s.ReadSong();
+
             if (s == null)
             {
                 return;
             }
 
-            PlaySong(s);
-            StartAgain();
+            PlaySong(s);            
         }
 
         public void PlaySong(Song s)
@@ -48,6 +49,7 @@ namespace DAN_XXXIX_Kristina_Garcia_Francisco
             int hours = 0;
             int minutes = 0;
             int seconds = 0;
+
             foreach (var item in time)
             {
                 hours = int.Parse(time[0]);
@@ -62,7 +64,13 @@ namespace DAN_XXXIX_Kristina_Garcia_Francisco
 
             Program.waitAdv.Set();
             while (milliseconds > 0)
-            {           
+            {
+                if (Console.KeyAvailable)
+                {
+                    playing= false;
+                    break;
+                }
+
                 Thread.Sleep(1000);
                 milliseconds = milliseconds - 1000;
                 if (milliseconds > 999)
@@ -71,7 +79,17 @@ namespace DAN_XXXIX_Kristina_Garcia_Francisco
                 }
             }
 
-            Console.WriteLine("Song finished.");
+            if (playing == true)
+            {
+                Program.waitAdv.WaitOne();
+                Console.WriteLine("Song finished.");
+                StartAgain();
+            }
+            else
+            {
+                Program.waitAdv.WaitOne();
+                OnNotification = s.SongStopped;
+            }                    
         }
 
         public void StartAgain()

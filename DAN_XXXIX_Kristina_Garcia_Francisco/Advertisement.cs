@@ -26,11 +26,19 @@ namespace DAN_XXXIX_Kristina_Garcia_Francisco
             // Because it starts 200 sec later
             while (time > sleepTime)
             {
+                if (AudioPlayer.playing == false)
+                {
+                    Program.waitAdv.Set();
+                    break;
+                }
+
                 Thread.Sleep(sleepTime);
                 time = time - sleepTime;
                 i = rng.Next(0, 5);
                 Console.WriteLine("\t\t\t\t{0}", Program.allAds[i].Name);
             }
-        }      
+
+            Program.waitAdv.Set();
+        }    
     }
 }
