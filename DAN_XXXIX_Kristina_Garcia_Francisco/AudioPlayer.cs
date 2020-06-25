@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace DAN_XXXIX_Kristina_Garcia_Francisco
 {
@@ -18,6 +13,7 @@ namespace DAN_XXXIX_Kristina_Garcia_Francisco
         /// Event that gets triggered when user closed the audio player
         /// </summary>
         public event Notification OnNotification;
+        public static bool playing = true;
 
         /// <summary>
         /// Checks if there is any goiven value to trigger the event
@@ -45,6 +41,7 @@ namespace DAN_XXXIX_Kristina_Garcia_Francisco
 
         public void PlaySong(Song s)
         {
+            Advertisement adv = new Advertisement();
             // Get duration to convert to milliseconds
             string duration = s.Duration;
             string[] time = duration.Split(':');
@@ -60,11 +57,18 @@ namespace DAN_XXXIX_Kristina_Garcia_Francisco
 
             int milliseconds = seconds * 1000 + minutes * 60000 + hours * 3600000;
 
+            Thread playAdv = new Thread(() => adv.StartAdvertisement(milliseconds, 200));
+            playAdv.Start();
+
+            Program.waitAdv.Set();
             while (milliseconds > 0)
-            {
+            {           
                 Thread.Sleep(1000);
                 milliseconds = milliseconds - 1000;
-                Console.WriteLine("Song is still ongoing for: {0} seconds.", milliseconds/1000);
+                if (milliseconds > 999)
+                {
+                    Console.WriteLine("Song is still ongoing for: {0} seconds.", milliseconds / 1000);
+                }
             }
 
             Console.WriteLine("Song finished.");
@@ -75,9 +79,9 @@ namespace DAN_XXXIX_Kristina_Garcia_Francisco
             Validation val = new Validation();
             Song s = new Song();
 
-            Console.Write("\nWould you like to play another song? (Yes/No): ");
-            Console.WriteLine();
+            Console.Write("\nWould you like to play another song? (Yes/No): ");            
             string answer = val.YesNo();
+            Console.WriteLine();
 
             if (answer == "yes")
             {

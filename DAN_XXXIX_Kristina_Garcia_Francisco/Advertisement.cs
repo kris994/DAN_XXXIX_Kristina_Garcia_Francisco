@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace DAN_XXXIX_Kristina_Garcia_Francisco
 {
     class Advertisement
     {
         public string Name { get; set; }
+        private Random rng = new Random();
 
         public Advertisement()
         {
@@ -20,32 +18,19 @@ namespace DAN_XXXIX_Kristina_Garcia_Francisco
             Name = name;
         }
 
-        public void AddAdvertisement()
+        public void StartAdvertisement(int time, int sleepTime)
         {
-            WriteReadFile wrf = new WriteReadFile();
+            Program.waitAdv.WaitOne();
+            int i = 0;
 
-            if (!Program.allAds.Any())
+            // Because it starts 200 sec later
+            while (time > sleepTime)
             {
-                Advertisement ad1 = new Advertisement("FitPass popusti");
-                Program.allAds.Add(ad1);
-                wrf.WriteSingleLineToFile(Program.adsFile, ad1.Name);
-
-                Advertisement ad2 = new Advertisement("Letovanje u Srbiji");
-                Program.allAds.Add(ad2);
-                wrf.WriteSingleLineToFile(Program.adsFile, ad2.Name);
-
-                Advertisement ad3 = new Advertisement("AliExpress free shipping");
-                Program.allAds.Add(ad3);
-                wrf.WriteSingleLineToFile(Program.adsFile, ad3.Name);
-
-                Advertisement ad4 = new Advertisement("Pizza metar by Popaj");
-                Program.allAds.Add(ad4);
-                wrf.WriteSingleLineToFile(Program.adsFile, ad4.Name);
-
-                Advertisement ad5 = new Advertisement("Online kurs programiranja");
-                Program.allAds.Add(ad5);
-                wrf.WriteSingleLineToFile(Program.adsFile, ad5.Name);
+                Thread.Sleep(sleepTime);
+                time = time - sleepTime;
+                i = rng.Next(0, 5);
+                Console.WriteLine("\t\t\t\t{0}", Program.allAds[i].Name);
             }
-        }
+        }      
     }
 }

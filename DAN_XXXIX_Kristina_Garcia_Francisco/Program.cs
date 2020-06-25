@@ -7,9 +7,10 @@ namespace DAN_XXXIX_Kristina_Garcia_Francisco
     class Program
     {
         public static string musicFile = "music.txt";
-        public static string adsFile = "advertisement.txt";
+        public static string adsFile = @"~\..\..\..\advertisement.txt";
         public static List<Song> allSong = new List<Song>();
         public static List<Advertisement> allAds = new List<Advertisement>();
+        public static EventWaitHandle waitAdv = new AutoResetEvent(false);
 
         public static void Main(string[] args)
         {
@@ -19,12 +20,12 @@ namespace DAN_XXXIX_Kristina_Garcia_Francisco
             Advertisement adv = new Advertisement();
 
             Thread readMusicFile = new Thread(() => wrf.ReadMusicFile(allSong, musicFile));
-            Thread writeAdvertisementFile = new Thread(adv.AddAdvertisement);
+            Thread readAdvertisementFile = new Thread(() => wrf.ReadAdvertisementFile(allAds, adsFile));
 
             readMusicFile.Start();
-            writeAdvertisementFile.Start();
+            readAdvertisementFile.Start();
             readMusicFile.Join();
-            writeAdvertisementFile.Join();
+            readAdvertisementFile.Join();
 
             bool restart = true;
             do

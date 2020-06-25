@@ -27,29 +27,13 @@ namespace DAN_XXXIX_Kristina_Garcia_Francisco
         /// <summary>
         /// Valid positive int input
         /// </summary>
-        public int ValidPositiveNumber()
+        public int ValidPositiveNumber(int maxNumber)
         {
             string s = Console.ReadLine();
             BackToMainMenu(s);
             int Num;
             bool b = Int32.TryParse(s, out Num);
-            while (!b || (Num < 0 || Num > 59))
-            {
-                Console.Write("Invalid input. Try again: ");
-                s = Console.ReadLine();
-                BackToMainMenu(s);
-                b = Int32.TryParse(s, out Num);
-            }
-            return Num;
-        }
-
-        public int ValidPositiveNumberHour()
-        {
-            string s = Console.ReadLine();
-            BackToMainMenu(s);
-            int Num;
-            bool b = Int32.TryParse(s, out Num);
-            while (!b || (Num < 0 || Num > 23))
+            while (!b || (Num < 0 || Num > maxNumber))
             {
                 Console.Write("Invalid input. Try again: ");
                 s = Console.ReadLine();

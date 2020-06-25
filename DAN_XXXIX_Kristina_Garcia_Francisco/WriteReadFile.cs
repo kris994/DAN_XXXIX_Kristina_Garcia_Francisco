@@ -22,11 +22,9 @@ namespace DAN_XXXIX_Kristina_Garcia_Francisco
             }
         }
 
-        /// <summary>
-        /// Read routes from file
-        /// </summary>
         public void ReadMusicFile(List<Song> list, string file)
         {
+            int id = 0;
             if (File.Exists(file))
             {
                 // Only read from file if empty
@@ -42,12 +40,27 @@ namespace DAN_XXXIX_Kristina_Garcia_Francisco
                             string authorName = trim[1];
                             string songName = trim[3];
                             string songDuration = trim[5];
-
-                            Song s = new Song(authorName, songName, songDuration);
+                            id++;                           
+                            Song s = new Song(id, authorName, songName, songDuration);
                             list.Add(s);
                         }
                     }
                 }            
+            }
+        }
+
+        /// <summary>
+        /// Read routes from file
+        /// </summary>
+        public void ReadAdvertisementFile(List<Advertisement> list, string file)
+        {
+            using (StreamReader streamReader = File.OpenText(file))
+            {
+                string line;
+                while ((line = streamReader.ReadLine()) != null)
+                {
+                    list.Add(new Advertisement(line));
+                }
             }
         }
     }
