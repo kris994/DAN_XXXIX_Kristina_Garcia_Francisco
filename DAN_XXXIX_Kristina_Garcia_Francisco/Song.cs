@@ -66,7 +66,7 @@ namespace DAN_XXXIX_Kristina_Garcia_Francisco
 
             if (Program.allSong.Any())
             {
-                Console.WriteLine("Press \"ESC\" button to stop the player from running.");
+                Console.WriteLine("Press \"ESC\", or any other button to stop the player from running.");
                 Console.WriteLine("-------------------------------");
                 ListAllSongs();
                 Console.WriteLine("-------------------------------");
