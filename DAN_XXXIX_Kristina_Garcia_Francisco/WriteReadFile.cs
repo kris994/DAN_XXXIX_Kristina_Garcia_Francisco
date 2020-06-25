@@ -4,14 +4,13 @@ using System.Linq;
 
 namespace DAN_XXXIX_Kristina_Garcia_Francisco
 {
+    /// <summary>
+    /// Reads or Writes from the file
+    /// </summary>
     class WriteReadFile
     {
-        #region Property
-
-        #endregion
-
         /// <summary>
-        /// Write routes to file
+        /// Write a single line to the file
         /// </summary>
         public void WriteSingleLineToFile(string file, string line)
         {
@@ -22,6 +21,11 @@ namespace DAN_XXXIX_Kristina_Garcia_Francisco
             }
         }
 
+        /// <summary>
+        /// Reads the song file
+        /// </summary>
+        /// <param name="list">List where we will save all the songs</param>
+        /// <param name="file">File that we are reading from</param>
         public void ReadMusicFile(List<Song> list, string file)
         {
             int id = 0;
@@ -50,16 +54,22 @@ namespace DAN_XXXIX_Kristina_Garcia_Francisco
         }
 
         /// <summary>
-        /// Read routes from file
+        /// Read all advertisements from the file
         /// </summary>
+        /// <param name="list">List where we will save all the advertisements</param>
+        /// <param name="file">File that we are reading from</param>
         public void ReadAdvertisementFile(List<Advertisement> list, string file)
         {
-            using (StreamReader streamReader = File.OpenText(file))
+            // Only read from file if empty
+            if (!Program.allAds.Any())
             {
-                string line;
-                while ((line = streamReader.ReadLine()) != null)
+                using (StreamReader streamReader = File.OpenText(file))
                 {
-                    list.Add(new Advertisement(line));
+                    string line;
+                    while ((line = streamReader.ReadLine()) != null)
+                    {
+                        list.Add(new Advertisement(line));
+                    }
                 }
             }
         }

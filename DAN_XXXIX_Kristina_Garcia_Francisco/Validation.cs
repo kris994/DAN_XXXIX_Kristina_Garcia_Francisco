@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace DAN_XXXIX_Kristina_Garcia_Francisco
 {
+    /// <summary>
+    /// Validates the user input
+    /// </summary>
     class Validation
     {
         /// <summary>
@@ -43,6 +46,10 @@ namespace DAN_XXXIX_Kristina_Garcia_Francisco
             return Num;
         }
 
+        /// <summary>
+        /// Makes sure the user inputs yes or no as an answer
+        /// </summary>
+        /// <returns>The answer</returns>
         public string YesNo()
         {
             string choose = Console.ReadLine().ToLower();

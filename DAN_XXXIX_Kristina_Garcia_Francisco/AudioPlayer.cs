@@ -3,20 +3,26 @@ using System.Threading;
 
 namespace DAN_XXXIX_Kristina_Garcia_Francisco
 {
+    /// <summary>
+    /// The audio player class that controls how the player works
+    /// </summary>
     class AudioPlayer
     {
         /// <summary>
-        /// Delegate used to send notifications for when audio player stoped playing.
+        /// Delegate used to send notifications when audio player stoped playing.
         /// </summary>
         public delegate void Notification();
         /// <summary>
         /// Event that gets triggered when user closed the audio player
         /// </summary>
         public event Notification OnNotification;
-        public static bool playing = true;
+        /// <summary>
+        /// Checks if the song has been canceled
+        /// </summary>
+        public static bool canceled = false;
 
         /// <summary>
-        /// Checks if there is any goiven value to trigger the event
+        /// Checks if there is any given value to trigger the event
         /// </summary>
         internal void Notify()
         {
@@ -26,24 +32,33 @@ namespace DAN_XXXIX_Kristina_Garcia_Francisco
             }
         }
 
+        /// <summary>
+        /// Follows all audio player activities that a thread needs to do
+        /// </summary>
         public void AutioPlayerActivity()
-        {
-            playing = true;
+        {           
             Song s = new Song();
             s = s.ReadSong();
 
+            // If a song was not chosen, return to main menu
             if (s == null)
             {
                 return;
             }
-
+            // Set canceled to false and start a song
+            canceled = false;
             PlaySong(s);            
         }
 
+        /// <summary>
+        /// Plays the chosen song
+        /// </summary>
+        /// <param name="s">the song that user has chosen</param>
         public void PlaySong(Song s)
         {
             Advertisement adv = new Advertisement();
-            // Get duration to convert to milliseconds
+
+            // Get song duration to convert it to milliseconds
             string duration = s.Duration;
             string[] time = duration.Split(':');
             int hours = 0;
@@ -59,15 +74,18 @@ namespace DAN_XXXIX_Kristina_Garcia_Francisco
 
             int milliseconds = seconds * 1000 + minutes * 60000 + hours * 3600000;
 
+            // Create the advertisement thread
             Thread playAdv = new Thread(() => adv.StartAdvertisement(milliseconds, 200));
             playAdv.Start();
 
+            // Start the thread right before the song starts playing
             Program.waitAdv.Set();
             while (milliseconds > 0)
             {
+                // Check if a key was pressed, if yes stop the song from playing
                 if (Console.KeyAvailable)
                 {
-                    playing= false;
+                    canceled = true;
                     break;
                 }
 
@@ -79,7 +97,8 @@ namespace DAN_XXXIX_Kristina_Garcia_Francisco
                 }
             }
 
-            if (playing == true)
+            // If the song was not canceled, ask the user if he wants to continue
+            if (canceled == false)
             {
                 Program.waitAdv.WaitOne();
                 Console.WriteLine("Song finished.");
@@ -87,11 +106,16 @@ namespace DAN_XXXIX_Kristina_Garcia_Francisco
             }
             else
             {
+                // Wait for the advertisement to finish to avoid lingering text
                 Program.waitAdv.WaitOne();
+                // Notify about the player stopping
                 OnNotification = s.SongStopped;
             }                    
         }
 
+        /// <summary>
+        /// Restart a song after the last one finished
+        /// </summary>
         public void StartAgain()
         {
             Validation val = new Validation();
@@ -103,10 +127,12 @@ namespace DAN_XXXIX_Kristina_Garcia_Francisco
 
             if (answer == "yes")
             {
-                Thread player = new Thread(AutioPlayerActivity);
+                Console.Clear();
+                Thread player = new Thread(AutioPlayerActivity);              
                 player.Start();
                 player.Join();
             }
+            // Close the audio player if user selected No
             else
             {
                 OnNotification = s.SongStopped;
